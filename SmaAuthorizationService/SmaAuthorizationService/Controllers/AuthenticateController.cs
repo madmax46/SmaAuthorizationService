@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AuthCommonLib.Authenticate;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SmaAuthorizationService.Repositories.Interfaces;
 using SmaAuthorizationService.Services.Interfaces;
 
@@ -15,11 +16,12 @@ namespace SmaAuthorizationService.Controllers
     public class AuthenticateController : ControllerBase
     {
         private readonly IAuthenticateService authenticateService;
+        private readonly ILogger<AuthenticateController> logger;
 
-
-        public AuthenticateController(IAuthenticateService authenticateService)
+        public AuthenticateController(IAuthenticateService authenticateService, ILogger<AuthenticateController> logger)
         {
             this.authenticateService = authenticateService;
+            this.logger = logger;
         }
 
         [HttpPost("/login")]
@@ -39,8 +41,9 @@ namespace SmaAuthorizationService.Controllers
 
                 return loginResult;
             }
-            catch
+            catch (Exception ex)
             {
+                logger.LogError(ex, "Ошибка");
                 Response.StatusCode = 500;
                 return new AuthenticateResponse();
             }

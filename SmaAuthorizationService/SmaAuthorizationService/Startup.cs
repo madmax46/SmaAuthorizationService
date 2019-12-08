@@ -33,8 +33,11 @@ namespace SmaAuthorizationService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddLogging(logging =>
+            {
+            });
 
-            services.AddSingleton<IConfiguration>(serviceProvider =>
+            services.AddSingleton<IConfigurationRoot>(serviceProvider =>
             {
                 var builder = new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
@@ -45,7 +48,7 @@ namespace SmaAuthorizationService
 
             services.AddSingleton<MySqlConfig>(serviceProvider =>
             {
-                var config = serviceProvider.GetRequiredService<IConfiguration>();
+                var config = serviceProvider.GetRequiredService<IConfigurationRoot>();
                 return config.GetSection("MySql")?.Get<MySqlConfig>();
             });
 
@@ -69,9 +72,11 @@ namespace SmaAuthorizationService
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
