@@ -36,6 +36,7 @@ namespace SmaAuthorizationService.Repositories
         {
             Person person = new Person()
             {
+                UserId = Convert.ToUInt32(row["id"]),
                 Login = Convert.ToString(row["login"]),
                 FirstName = Convert.ToString(row["firstName"]),
                 SecondName = Convert.ToString(row["secondName"]),

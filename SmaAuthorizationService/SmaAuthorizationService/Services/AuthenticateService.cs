@@ -43,7 +43,7 @@ namespace SmaAuthorizationService.Services
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            var userInfo = new UserInfo(person.FirstName, person.SecondName, person.EMail, new List<string>() { person.Role });
+            var userInfo = new UserInfo(person.UserId, person.FirstName, person.SecondName, person.EMail, new List<string>() { person.Role });
             return new AuthenticateResponse(true, encodedJwt, username, userInfo);
 
         }
@@ -58,6 +58,7 @@ namespace SmaAuthorizationService.Services
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType, person.Login),
                     new Claim(ClaimsIdentity.DefaultRoleClaimType, person.Role),
+                    new Claim("UserId", person.UserId.ToString()),
                     new Claim("FirstName", person.FirstName),
                     new Claim("SecondName", person.SecondName),
                     new Claim("Email", person.EMail)

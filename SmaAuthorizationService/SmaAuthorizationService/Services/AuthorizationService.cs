@@ -38,8 +38,10 @@ namespace SmaAuthorizationService.Services
                 var encodedJwt = tokenHandler.ReadJwtToken(request.Token);
 
                 var role = encodedJwt.Claims.FirstOrDefault(r => r.Type == ClaimsIdentity.DefaultRoleClaimType)?.Value;
+                var userId = encodedJwt.Claims.FirstOrDefault(r => r.Type == "UserId");
                 var userInfo = new AuthCommonLib.UserInfo()
                 {
+                    UserId = userId == null ? 0 : Convert.ToUInt32(userId.Value),
                     Email = encodedJwt.Claims.FirstOrDefault(r => r.Type == "Email")?.Value,
                     FirstName = encodedJwt.Claims.FirstOrDefault(r => r.Type == "FirstName")?.Value,
                     SecondName = encodedJwt.Claims.FirstOrDefault(r => r.Type == "SecondName")?.Value,
